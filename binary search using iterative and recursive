@@ -1,0 +1,37 @@
+#include <iostream>
+using namespace std;
+
+// Iterative Binary Search Function
+int binarySearchIterative(int arr[], int size, int target) {
+    int left = 0, right = size - 1;
+    
+    while (left <= right) {
+        int mid = left + (right - left) / 2; // Middle index
+        
+        if (arr[mid] == target) {
+            return mid; // Element found
+        } else if (arr[mid] < target) {
+            left = mid + 1; // Search in the right half
+        } else {
+            right = mid - 1; // Search in the left half
+        }
+    }
+    return -1; // Element not found
+}
+
+
+// Recursive Binary Search Function
+int binarySearchRecursive(int arr[], int left, int right, int target) {
+    if (left <= right) {
+        int mid = left + (right - left) / 2; // Middle index
+        
+        if (arr[mid] == target) {
+            return mid; // Element found
+        } else if (arr[mid] < target) {
+            return binarySearchRecursive(arr, mid + 1, right, target); // Search in the right half
+        } else {
+            return binarySearchRecursive(arr, left, mid - 1, target); // Search in the left half
+        }
+    }
+    return -1; // Element not found
+}
