@@ -1,0 +1,202 @@
+#include <iostream>
+#include <ctime>
+
+using namespace std;
+
+
+void bubbleSort(int* arr, int size);
+void selectionSort(int* arr, int size);
+void insertionSort(int* arr, int size);
+void quickSort(int* arr, int low, int high);
+int partition(int* arr, int low, int high);
+void mergeSort(int* arr, int left, int right);
+void merge(int* arr, int left, int mid, int right);
+
+
+void printArray(int* arr, int size) {
+    for (int i = 0; i < size; i++) {
+        cout << *(arr + i) << " ";
+    }
+    cout << endl;
+}
+
+
+int main() {
+    int arr[] = {64, 25, 12, 22, 11};  
+    int size = sizeof(arr) / sizeof(arr[0]);
+
+    int* arrPointer = arr;
+
+    cout << "Original array: ";
+    printArray(arrPointer, size);
+
+    // Time and sort using Bubble Sort
+    clock_t start = clock();
+    bubbleSort(arrPointer, size);
+    clock_t end = clock();
+    cout << "Sorted by Bubble Sort: ";
+    printArray(arrPointer, size);
+    cout << "Time taken by Bubble Sort: " << double(end - start) / CLOCKS_PER_SEC << " seconds\n";
+
+    // Reset array to original state
+    int arr2[] = {64, 25, 12, 22, 11};
+    arrPointer = arr2;
+
+    // Time and sort using Selection Sort
+    start = clock();
+    selectionSort(arrPointer, size);
+    end = clock();
+    cout << "Sorted by Selection Sort: ";
+    printArray(arrPointer, size);
+    cout << "Time taken by Selection Sort: " << double(end - start) / CLOCKS_PER_SEC << " seconds\n";
+
+    // Reset array to original state
+    int arr3[] = {64, 25, 12, 22, 11};
+    arrPointer = arr3;
+
+    // Time and sort using Insertion Sort
+    start = clock();
+    insertionSort(arrPointer, size);
+    end = clock();
+    cout << "Sorted by Insertion Sort: ";
+    printArray(arrPointer, size);
+    cout << "Time taken by Insertion Sort: " << double(end - start) / CLOCKS_PER_SEC << " seconds\n";
+
+   
+    int arr4[] = {64, 25, 12, 22, 11};
+    arrPointer = arr4;
+
+    
+    start = clock();
+    quickSort(arrPointer, 0, size - 1);
+    end = clock();
+    cout << "Sorted by Quick Sort: ";
+    printArray(arrPointer, size);
+    cout << "Time taken by Quick Sort: " << double(end - start) / CLOCKS_PER_SEC << " seconds\n";
+
+
+    int arr5[] = {64, 25, 12, 22, 11};
+    arrPointer = arr5;
+
+
+    start = clock();
+    mergeSort(arrPointer, 0, size - 1);
+    end = clock();
+    cout << "Sorted by Merge Sort: ";
+    printArray(arrPointer, size);
+    cout << "Time taken by Merge Sort: " << double(end - start) / CLOCKS_PER_SEC << " seconds\n";
+
+    return 0;
+}
+
+
+void bubbleSort(int* arr, int size) {
+    for (int i = 0; i < size - 1; i++) {
+        for (int j = 0; j < size - 1 - i; j++) {
+            if (*(arr + j) > *(arr + j + 1)) {
+                swap(*(arr + j), *(arr + j + 1));
+            }
+        }
+    }
+}
+
+// Selection Sort using pointers
+void selectionSort(int* arr, int size) {
+    for (int i = 0; i < size - 1; i++) {
+        int minIdx = i;
+        for (int j = i + 1; j < size; j++) {
+            if (*(arr + j) < *(arr + minIdx)) {
+                minIdx = j;
+            }
+        }
+        swap(*(arr + minIdx), *(arr + i));
+    }
+}
+
+// Insertion Sort using pointers
+void insertionSort(int* arr, int size) {
+    for (int i = 1; i < size; i++) {
+        int key = *(arr + i);
+        int j = i - 1;
+        while (j >= 0 && *(arr + j) > key) {
+            *(arr + j + 1) = *(arr + j);
+            j--;
+        }
+        *(arr + j + 1) = key;
+    }
+}
+
+// Quick Sort using pointers
+void quickSort(int* arr, int low, int high) {
+    if (low < high) {
+        int pivot = partition(arr, low, high);
+        quickSort(arr, low, pivot - 1);
+        quickSort(arr, pivot + 1, high);
+    }
+}
+
+int partition(int* arr, int low, int high) {
+    int pivot = *(arr + high);
+    int i = low - 1;
+    for (int j = low; j < high; j++) {
+        if (*(arr + j) < pivot) {
+            i++;
+            swap(*(arr + i), *(arr +
+j));
+        }
+    }
+    swap(*(arr + i + 1), *(arr + high));
+    return i + 1;
+}
+
+// Merge Sort using pointers
+void mergeSort(int* arr, int left, int right) {
+    if (left < right) {
+        int mid = left + (right - left) / 2;
+        mergeSort(arr, left, mid);
+        mergeSort(arr, mid + 1, right);
+        merge(arr, left, mid, right);
+    }
+}
+
+void merge(int* arr, int left, int mid, int right) {
+    int n1 = mid - left + 1;
+    int n2 = right - mid;
+
+    int* leftArr = new int[n1];
+    int* rightArr = new int[n2];
+
+    for (int i = 0; i < n1; i++) {
+        *(leftArr + i) = *(arr + left + i);
+    }
+    for (int i = 0; i < n2; i++) {
+        *(rightArr + i) = *(arr + mid + 1 + i);
+    }
+
+    int i = 0, j = 0, k = left;
+    while (i < n1 && j < n2) {
+        if (*(leftArr + i) <= *(rightArr + j)) {
+            *(arr + k) = *(leftArr + i);
+            i++;
+        } else {
+            *(arr + k) = *(rightArr + j);
+            j++;
+        }
+        k++;
+    }
+
+    while (i < n1) {
+        *(arr + k) = *(leftArr + i);
+        i++;
+        k++;
+    }
+    while (j < n2) {
+        *(arr + k) = *(rightArr + j);
+        j++;
+        k++;
+    }
+
+    delete[] leftArr;
+    delete[] rightArr;
+}
+
